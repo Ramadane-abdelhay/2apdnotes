@@ -40,7 +40,8 @@ const GlobalStyles = () => (
     /* ── Header ── */
     .p-header { position: sticky; top: 0; z-index: 50; padding: 16px 32px; }
     .p-header-inner {
-      max-width: 1400px; margin: 0 auto;
+      max-width: 1336px; /* FIXED: Now perfectly aligns with the main layout content edges */
+      margin: 0 auto;
       display: flex; align-items: center; justify-content: space-between;
       height: 60px; padding: 0 24px; border-radius: 16px;
       background: #FFFFFF; border: 1px solid rgba(0,0,0,0.07);
@@ -251,8 +252,9 @@ const GlobalStyles = () => (
     .p-btn-cancel { background: #F1F5F9; color: #64748B; }
 
     /* ── Grades table ── */
-    .p-table-wrap { overflow-x: auto; }
+    .p-table-wrap { overflow-x: auto; width: 100%; -webkit-overflow-scrolling: touch; }
     .p-table { width: 100%; border-collapse: collapse; }
+    .p-table th, .p-table td { white-space: nowrap; }
     .p-table thead tr { border-bottom: 1px solid rgba(0,0,0,0.05); }
     .p-table th {
       padding: 14px 20px;
@@ -261,6 +263,8 @@ const GlobalStyles = () => (
     }
     .p-table tbody tr:hover { background: #F8FAFC; }
     .p-table td { padding: 12px 20px; font-size: 13px; }
+
+    .p-student-name { white-space: normal; min-width: 130px; line-height: 1.4; }
 
     .p-student-num {
       font-family: 'JetBrains Mono', monospace;
@@ -288,7 +292,7 @@ const GlobalStyles = () => (
 
     /* Comment input */
     .p-comment-input {
-      width: 100%; padding: 8px 14px; border-radius: 8px; border: none;
+      width: 100%; min-width: 150px; padding: 8px 14px; border-radius: 8px; border: none;
       background: #F8FAFC; font-family: 'Sora', sans-serif;
       font-size: 11px; color: #475569; outline: none; transition: all .2s;
     }
@@ -376,6 +380,58 @@ const GlobalStyles = () => (
     .p-anim1 { animation: pIn .35s ease both; }
     .p-anim2 { animation: pIn .35s .07s ease both; }
     .p-anim3 { animation: pIn .35s .14s ease both; }
+
+    /* ── RESPONSIVE TWEAKS FOR < 480px ── */
+    @media (max-width: 480px) {
+      .p-main { padding: 16px 16px 80px; }
+      
+      .p-header { padding: 12px; }
+      .p-header-inner { padding: 0 12px; gap: 8px; }
+      .p-header-logos { gap: 10px; }
+      .p-header-logo { height: 26px; } 
+      .p-prof-name { font-size: 11px; }
+      .p-prof-role { font-size: 8px; }
+
+      .p-title-row { flex-direction: column; align-items: flex-start; gap: 12px; }
+      .p-page-title { font-size: 22px; }
+      .p-schedule-btn { width: 100%; justify-content: center; }
+
+      /* Allow modules to swipe left/right smoothly */
+      .p-module-tabs { flex-wrap: nowrap; overflow-x: auto; padding-bottom: 8px; width: 100%; -webkit-overflow-scrolling: touch; }
+      .p-module-btn { flex-shrink: 0; padding: 8px 12px; font-size: 11px; }
+
+      /* Full width search bar & Nav */
+      .p-nav-row { flex-direction: column; align-items: stretch; gap: 12px; }
+      .p-nav-tabs { flex-wrap: wrap; }
+      .p-nav-tab { flex: 1; justify-content: center; }
+      .p-search-input { width: 100%; }
+
+      /* Fix grid sizes for profile cards */
+      .p-dir-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; }
+      .p-dir-card { padding: 16px 12px; }
+
+      /* Fix grades action bar */
+      .p-grades-toolbar { padding: 16px; flex-direction: column; align-items: stretch; gap: 12px; }
+      .p-session-tabs { flex-wrap: wrap; }
+      .p-session-tab { flex: 1; justify-content: center; }
+      .p-toolbar-btns { flex-wrap: wrap; justify-content: stretch; width: 100%; }
+      .p-btn { flex: 1; justify-content: center; }
+
+      /* Fix grades table */
+      .p-table th, .p-table td { padding: 10px 8px; }
+      .p-table th:first-child, .p-table td:first-child { padding-left: 16px; }
+      .p-table th:last-child, .p-table td:last-child { padding-right: 16px; }
+      .p-note-input { width: 55px; font-size: 12px; padding: 6px 4px; }
+      .p-comment-input { min-width: 100px; }
+
+      /* Fix Save footer */
+      .p-save-footer { padding: 16px; }
+      .p-save-btn { width: 100%; justify-content: center; }
+
+      /* Modal adjustments */
+      .p-modal { padding: 24px; width: 100%; }
+      .p-big-avatar { width: 90px; height: 90px; font-size: 32px; margin-bottom: 16px; }
+    }
   `}</style>
 );
 
