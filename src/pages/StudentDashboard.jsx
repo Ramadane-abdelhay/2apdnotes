@@ -268,7 +268,6 @@ const GlobalStyles = () => (
     }
     .grades-table {
       width: 100%; border-collapse: collapse;
-      /* Removed min-width so the table shrinks naturally to its text content! */
     }
     .grades-table th {
       font-size: 9px; font-weight: 700; text-transform: uppercase;
@@ -282,10 +281,20 @@ const GlobalStyles = () => (
       transition: all .2s;
     }
     .grades-table tbody tr:hover { background: #F8FAFC; }
+    
     .grades-table td {
       padding: 14px 16px; font-size: 13px; color: #64748B;
+      /* By default, keep things like numbers on one line */
       white-space: nowrap; 
     }
+    
+    /* NEW FIX: Target only the first column (Module Name) to allow wrapping! */
+    .grades-table td:first-child {
+      white-space: normal; /* This allows the long text to break into 2/3 lines */
+      min-width: 120px; /* Prevents it from getting squeezed into 1 word per line */
+      line-height: 1.5;
+    }
+
     .module-name-cell {
       font-size: 13px; font-weight: 600; color: #1E293B;
     }
@@ -458,7 +467,6 @@ const GlobalStyles = () => (
 
       .grades-table-wrap { padding: 16px 0; }
       
-      /* Allows table to shrink even tighter on mobile by reducing padding */
       .grades-table th, .grades-table td {
         padding: 10px 8px; 
       }
