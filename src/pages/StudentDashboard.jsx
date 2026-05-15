@@ -46,6 +46,12 @@ const GlobalStyles = () => (
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
     }
+    .glass-strong {
+      background: #FFFFFF;
+      border: 1px solid rgba(0,0,0,0.09);
+      backdrop-filter: blur(32px);
+      -webkit-backdrop-filter: blur(32px);
+    }
 
     /* ── Header ── */
     .header {
@@ -82,6 +88,14 @@ const GlobalStyles = () => (
     @media (max-width: 1024px) {
       .main-layout { grid-template-columns: 1fr; }
       .sidebar { position: static !important; }
+    }
+
+    /* CRITICAL FIX: Right Column Wrapper to prevent Grid blowout */
+    .content-col {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      min-width: 0; /* This forces the grid to respect the screen width */
     }
 
     /* ── Sidebar ── */
@@ -163,6 +177,7 @@ const GlobalStyles = () => (
       border: 1px solid rgba(0,0,0,0.06);
       transition: all .25s; cursor: default;
     }
+    .exam-item:last-child { margin-bottom: 0; }
     .exam-item:hover {
       background: #EFF6FF;
       border-color: rgba(37,99,235,0.2);
@@ -187,9 +202,16 @@ const GlobalStyles = () => (
       padding-top: 10px;
     }
 
-    /* ── Grades Panel ── */
-    .grades-panel { border-radius: 20px; overflow: hidden; }
-    .grades-header { padding: 28px 32px 0; }
+    /* ── Grades Panel Separated ── */
+    .grades-controls-card { 
+      border-radius: 20px; 
+      padding: 28px 32px; 
+      margin-bottom: 16px; 
+    }
+    .grades-table-card { 
+      border-radius: 20px; 
+      overflow: hidden; 
+    }
     .grades-title {
       font-size: 22px; font-weight: 800; color: #0F172A;
       margin-bottom: 24px; letter-spacing: -0.5px;
@@ -213,6 +235,7 @@ const GlobalStyles = () => (
       box-shadow: 0 4px 16px rgba(37,99,235,0.3);
     }
     .sem-tab:not(.active):hover { color: #475569; }
+    .sem-text-mobile { display: none; }
 
     /* ── Session Tabs ── */
     .session-tabs {
@@ -240,17 +263,18 @@ const GlobalStyles = () => (
     .grades-table-wrap { 
       overflow-x: auto; 
       padding: 24px 32px; 
-      -webkit-overflow-scrolling: touch; /* Ensures smooth horizontal scrolling on mobile */
+      -webkit-overflow-scrolling: touch; 
+      width: 100%;
     }
     .grades-table {
-      width: 100%; 
-      border-collapse: collapse;
-      min-width: 600px; /* Forces the table to scroll rather than squish layout */
+      width: 100%; border-collapse: collapse;
+      min-width: 600px; /* Forces table width so scrollbar activates */
     }
     .grades-table th {
       font-size: 9px; font-weight: 700; text-transform: uppercase;
       letter-spacing: 2px; color: #94A3B8; padding: 0 16px 16px;
       text-align: left;
+      white-space: nowrap; /* Stops headers from wrapping/stacking */
     }
     .grades-table th.center { text-align: center; }
     .grades-table tbody tr {
@@ -260,6 +284,7 @@ const GlobalStyles = () => (
     .grades-table tbody tr:hover { background: #F8FAFC; }
     .grades-table td {
       padding: 14px 16px; font-size: 13px; color: #64748B;
+      white-space: nowrap; /* Stops cell data from wrapping/stacking */
     }
     .module-name-cell {
       font-size: 13px; font-weight: 600; color: #1E293B;
@@ -426,8 +451,15 @@ const GlobalStyles = () => (
       .stat-chip-val { font-size: 18px; }
       .stat-chip-lbl { font-size: 8px; letter-spacing: 1px; }
       
-      .grades-header { padding: 20px 16px 0; }
-      .grades-table-wrap { padding: 16px; }
+      .grades-controls-card { padding: 20px 16px; }
+      
+      /* Toggle Semestre to S */
+      .sem-text-desktop { display: none; }
+      .sem-text-mobile { display: inline; }
+
+      .grades-table-wrap { padding: 16px 0; }
+      .grades-table th:first-child, .grades-table td:first-child { padding-left: 16px; }
+      .grades-table th:last-child, .grades-table td:last-child { padding-right: 16px; }
       
       .session-tabs { flex-wrap: wrap; }
       .session-tab { padding: 8px 4px; font-size: 10px; }
@@ -634,8 +666,7 @@ export default function StudentDashboard() {
         </aside>
 
         {/* ── GRADES PANEL ── */}
-        {/* ADDED minWidth: 0 to the wrapper so Grid does not stretch past screen bounds */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', minWidth: 0 }}>
+        <div className="content-col">
 
           {/* Stat chips */}
           <div className="stats-row anim-3">
@@ -653,38 +684,39 @@ export default function StudentDashboard() {
             </div>
           </div>
 
-          {/* Grades panel */}
-          <div className="grades-panel glass anim-4">
-            <div className="grades-header">
-              <div className="grades-title">Relevé de notes</div>
+          {/* Separated Parameters Card */}
+          <div className="grades-controls-card glass anim-4">
+            <div className="grades-title">Relevé de notes</div>
 
-              {/* Semester selector */}
-              <div className="sem-tabs">
-                {[1, 2, 3].map(sem => (
-                  <button key={sem} className={`sem-tab ${selectedSemester === sem ? 'active' : ''}`} onClick={() => setSelectedSemester(sem)}>
-                    Semestre {sem}
-                  </button>
-                ))}
-              </div>
-
-              {/* Session tabs */}
-              <div className="session-tabs" style={{ marginBottom: '0' }}>
-                <button
-                  className={`session-tab ${selectedTab === 'normal' ? 'active-normal' : ''}`}
-                  onClick={() => setSelectedTab('normal')}
-                >Session Normale</button>
-                <button
-                  className={`session-tab ${selectedTab === 'rattrapage' ? 'active-normal' : ''}`}
-                  onClick={() => setSelectedTab('rattrapage')}
-                >Rattrapage</button>
-                <button
-                  className={`session-tab ${selectedTab === 'final' ? 'active-final' : ''}`}
-                  onClick={() => setSelectedTab('final')}
-                >Note Finale</button>
-              </div>
+            {/* Semester selector */}
+            <div className="sem-tabs">
+              {[1, 2, 3].map(sem => (
+                <button key={sem} className={`sem-tab ${selectedSemester === sem ? 'active' : ''}`} onClick={() => setSelectedSemester(sem)}>
+                  <span className="sem-text-desktop">Semestre {sem}</span>
+                  <span className="sem-text-mobile">S{sem}</span>
+                </button>
+              ))}
             </div>
 
-            {/* Table */}
+            {/* Session tabs */}
+            <div className="session-tabs">
+              <button
+                className={`session-tab ${selectedTab === 'normal' ? 'active-normal' : ''}`}
+                onClick={() => setSelectedTab('normal')}
+              >Session Normale</button>
+              <button
+                className={`session-tab ${selectedTab === 'rattrapage' ? 'active-normal' : ''}`}
+                onClick={() => setSelectedTab('rattrapage')}
+              >Rattrapage</button>
+              <button
+                className={`session-tab ${selectedTab === 'final' ? 'active-final' : ''}`}
+                onClick={() => setSelectedTab('final')}
+              >Note Finale</button>
+            </div>
+          </div>
+
+          {/* Separated Table Card */}
+          <div className="grades-table-card glass anim-4">
             <div className="grades-table-wrap">
               {displayedGrades.length === 0 ? (
                 <div className="empty-state">Aucun module disponible pour cette session.</div>
