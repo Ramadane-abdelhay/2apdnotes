@@ -65,7 +65,7 @@ const GlobalStyles = () => (
     }
     .header-logos { display: flex; align-items: center; gap: 20px; }
     .header-divider { width: 1px; height: 28px; background: rgba(0,0,0,0.1); }
-    .header-logo { height: 28px; object-fit: contain; opacity: 0.75; transition: opacity .2s; }
+    .header-logo { height: 40px; object-fit: contain; opacity: 0.75; transition: all .2s; }
     .header-logo:hover { opacity: 1; }
     .logout-btn {
       width: 40px; height: 40px; border-radius: 10px; border: none;
@@ -409,6 +409,32 @@ const GlobalStyles = () => (
     .anim-2 { animation: slideInUp .4s .08s ease both; }
     .anim-3 { animation: slideInUp .4s .16s ease both; }
     .anim-4 { animation: slideInUp .4s .24s ease both; }
+
+    /* ── RESPONSIVE TWEAKS FOR < 480px ── */
+    @media (max-width: 480px) {
+      .main-layout { padding: 0 16px 80px; }
+      
+      .header { padding: 12px 12px; }
+      .header-inner { padding: 0 12px; gap: 10px; }
+      .header-logos { gap: 10px; }
+      .header-logo { height: 30px; } /* Scales down logos on mobile */
+      
+      .profile-card { padding: 20px; }
+      .exam-card { padding: 20px; }
+      
+      .stats-row { gap: 8px; }
+      .stat-chip { padding: 12px 10px; }
+      .stat-chip-val { font-size: 18px; }
+      .stat-chip-lbl { font-size: 8px; letter-spacing: 1px; }
+      
+      .grades-header { padding: 20px 16px 0; }
+      .grades-table-wrap { padding: 16px; }
+      
+      .session-tabs { flex-wrap: wrap; }
+      .session-tab { padding: 8px 4px; font-size: 10px; }
+      
+      .modal-box { padding: 24px; }
+    }
   `}</style>
 );
 
