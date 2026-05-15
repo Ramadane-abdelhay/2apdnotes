@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { supabase } from '../lib/supabaseClient';
 import { useNavigate } from 'react-router-dom';
 import {
-  Users, Upload, Save, X, Search,
+  Users, Upload, Save, X, Search, ChevronDown,
   FileSpreadsheet, LogOut, Calendar, CheckCircle2, Edit3, Lock, BookOpen
 } from 'lucide-react';
 
@@ -40,7 +40,7 @@ const GlobalStyles = () => (
     /* ── Header ── */
     .p-header { position: sticky; top: 0; z-index: 50; padding: 16px 32px; }
     .p-header-inner {
-      max-width: 1336px; /* FIXED: Now perfectly aligns with the main layout content edges */
+      max-width: 1336px;
       margin: 0 auto;
       display: flex; align-items: center; justify-content: space-between;
       height: 60px; padding: 0 24px; border-radius: 16px;
@@ -48,14 +48,9 @@ const GlobalStyles = () => (
     }
     .p-header-logos { display: flex; align-items: center; gap: 20px; }
     .p-header-div { width: 1px; height: 28px; background: rgba(0,0,0,0.1); }
-    .p-header-logo { height: 28px; object-fit: contain; opacity: 0.75; transition: opacity .2s; }
+    .p-header-logo { height: 34px; object-fit: contain; opacity: 0.85; transition: opacity .2s; }
     .p-header-logo:hover { opacity: 1; }
     .p-header-right { display: flex; align-items: center; gap: 16px; }
-    .p-prof-name { font-size: 13px; font-weight: 700; color: #0F172A; text-align: right; }
-    .p-prof-role {
-      font-size: 9px; font-weight: 700; text-transform: uppercase;
-      letter-spacing: 2px; color: #2563EB; text-align: right;
-    }
     .p-logout-btn {
       width: 40px; height: 40px; border-radius: 10px; border: none;
       background: rgba(0,0,0,0.04); color: #64748B; cursor: pointer;
@@ -71,68 +66,57 @@ const GlobalStyles = () => (
       padding: 24px 32px 80px;
     }
 
-    /* ── MODULE SECTION ── */
-    .p-module-section {
-       margin-bottom: 32px;
-       display: flex;
-       flex-direction: column;
-       gap: 12px;
-    }
-    .p-module-label {
-      font-size: 10px; font-weight: 800; text-transform: uppercase;
-      letter-spacing: 1.5px; color: #94A3B8; margin-left: 4px;
-    }
-    .p-module-tabs { 
-      display: flex; flex-wrap: wrap; gap: 10px; 
-      padding: 6px; background: rgba(255,255,255,0.4); 
-      border-radius: 16px; border: 1px solid rgba(255,255,255,0.6);
-      width: fit-content;
-    }
-    .p-module-btn {
-      display: flex; align-items: center; gap: 8px;
-      padding: 10px 20px; border-radius: 12px; border: 1px solid transparent;
-      font-family: 'Sora', sans-serif; font-size: 13px; font-weight: 600;
-      cursor: pointer; transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-      background: #FFFFFF; color: #64748B;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.02);
-    }
-    .p-module-btn.active {
-      background: #FFFFFF; color: #2563EB; 
-      border-color: rgba(37,99,235,0.2);
-      box-shadow: 0 10px 20px rgba(37,99,235,0.12);
-      transform: translateY(-2px);
-    }
-    .p-module-btn.active .p-mod-indicator {
-        width: 6px; height: 6px; background: #2563EB; border-radius: 50%;
-        box-shadow: 0 0 0 3px rgba(37,99,235,0.15);
-        animation: pPulse 2s infinite;
-    }
-    @keyframes pPulse {
-        0% { transform: scale(1); opacity: 1; }
-        50% { transform: scale(1.3); opacity: 0.5; }
-        100% { transform: scale(1); opacity: 1; }
-    }
-    .p-module-btn:not(.active):hover { 
-      background: #F8FAFC; color: #1E293B; border-color: rgba(0,0,0,0.05);
-    }
-
     /* ── Page title row ── */
     .p-title-row {
       display: flex; flex-wrap: wrap; align-items: center;
-      justify-content: space-between; gap: 20px; margin-bottom: 12px;
+      justify-content: space-between; gap: 20px; margin-bottom: 24px;
     }
     .p-page-title {
       font-size: 28px; font-weight: 800; color: #0F172A;
-      letter-spacing: -0.8px;
+      letter-spacing: -0.8px; line-height: 1.2;
+    }
+    .p-prof-subtitle {
+      font-size: 13px; font-weight: 600; color: #64748B;
+      margin-top: 4px; display: flex; align-items: center; gap: 6px;
     }
     .p-schedule-btn {
       display: flex; align-items: center; gap: 8px;
       padding: 10px 20px; border-radius: 12px; border: 1px solid rgba(0,0,0,0.07);
       font-family: 'Sora', sans-serif; font-size: 12px; font-weight: 600;
       background: #FFFFFF; color: #334155; cursor: pointer; transition: all .2s;
-      white-space: nowrap;
+      white-space: nowrap; box-shadow: 0 4px 12px rgba(0,0,0,0.02);
     }
-    .p-schedule-btn:hover { background: #EFF6FF; border-color: rgba(37,99,235,0.2); color: #1D4ED8; }
+    .p-schedule-btn:hover { background: #EFF6FF; border-color: rgba(37,99,235,0.2); color: #1D4ED8; transform: translateY(-1px); }
+
+    /* ── MODULE DROPDOWN SECTION ── */
+    .p-module-section { margin-bottom: 24px; display: flex; flex-direction: column; gap: 8px; }
+    .p-module-label {
+      font-size: 10px; font-weight: 800; text-transform: uppercase;
+      letter-spacing: 1.5px; color: #94A3B8; margin-left: 4px;
+    }
+    .p-module-select-wrap {
+      position: relative; width: 100%; max-width: 400px;
+    }
+    .p-module-select-icon {
+      position: absolute; left: 16px; top: 50%; transform: translateY(-50%);
+      color: #2563EB; pointer-events: none;
+    }
+    .p-module-select {
+      width: 100%; appearance: none;
+      background: #FFFFFF; border: 1px solid rgba(37,99,235,0.15);
+      border-radius: 14px; padding: 14px 40px 14px 44px;
+      font-family: 'Sora', sans-serif; font-size: 14px; font-weight: 600; color: #1E293B;
+      outline: none; cursor: pointer; transition: all .2s;
+      box-shadow: 0 4px 12px rgba(37,99,235,0.04);
+    }
+    .p-module-select:hover, .p-module-select:focus {
+      border-color: rgba(37,99,235,0.4);
+      box-shadow: 0 6px 16px rgba(37,99,235,0.08);
+    }
+    .p-module-select-caret {
+      position: absolute; right: 16px; top: 50%; transform: translateY(-50%);
+      color: #64748B; pointer-events: none;
+    }
 
     /* ── Nav tabs ── */
     .p-nav-row {
@@ -264,18 +248,11 @@ const GlobalStyles = () => (
     .p-table tbody tr:hover { background: #F8FAFC; }
     .p-table td { padding: 12px 20px; font-size: 13px; }
 
-    .p-student-name { white-space: normal; min-width: 130px; line-height: 1.4; }
+    .p-student-name { white-space: normal; min-width: 130px; line-height: 1.4; font-weight: 600; color: #1E293B; }
 
     .p-student-num {
       font-family: 'JetBrains Mono', monospace;
       font-size: 12px; font-weight: 700; color: #2563EB;
-    }
-    .p-student-avatar {
-      width: 34px; height: 34px; border-radius: 10px;
-      background: #EFF6FF; border: 1px solid rgba(37,99,235,0.1);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 12px; font-weight: 800; color: #2563EB;
-      overflow: hidden; flex-shrink: 0;
     }
 
     /* Note input */
@@ -387,18 +364,13 @@ const GlobalStyles = () => (
       
       .p-header { padding: 12px; }
       .p-header-inner { padding: 0 12px; gap: 8px; }
-      .p-header-logos { gap: 10px; }
       .p-header-logo { height: 26px; } 
-      .p-prof-name { font-size: 11px; }
-      .p-prof-role { font-size: 8px; }
 
-      .p-title-row { flex-direction: column; align-items: flex-start; gap: 12px; }
-      .p-page-title { font-size: 22px; }
+      .p-title-row { flex-direction: column; align-items: flex-start; gap: 12px; margin-bottom: 20px; }
+      .p-page-title { font-size: 24px; }
       .p-schedule-btn { width: 100%; justify-content: center; }
 
-      /* Allow modules to swipe left/right smoothly */
-      .p-module-tabs { flex-wrap: nowrap; overflow-x: auto; padding-bottom: 8px; width: 100%; -webkit-overflow-scrolling: touch; }
-      .p-module-btn { flex-shrink: 0; padding: 8px 12px; font-size: 11px; }
+      .p-module-select-wrap { max-width: 100%; }
 
       /* Full width search bar & Nav */
       .p-nav-row { flex-direction: column; align-items: stretch; gap: 12px; }
@@ -657,12 +629,6 @@ export default function ProfessorDashboard() {
             <img src="https://ramadane-abdelhay.github.io/Salery_predection_app/lafac-logo.png" alt="Fac" className="p-header-logo" />
           </div>
           <div className="p-header-right">
-            {prof && (
-              <div>
-                <div className="p-prof-name">{prof.full_name}</div>
-                <div className="p-prof-role">Professeur</div>
-              </div>
-            )}
             <button className="p-logout-btn" onClick={() => navigate('/')} title="Se déconnecter">
               <LogOut size={15} />
             </button>
@@ -675,28 +641,35 @@ export default function ProfessorDashboard() {
 
         {/* 1. Page Title & Action */}
         <div className="p-title-row p-anim1">
-          <div className="p-page-title">Tableau de Bord</div>
+          <div>
+            <div className="p-page-title">Tableau de Bord</div>
+            {prof && (
+              <div className="p-prof-subtitle">
+                <Users size={14} /> Professeur {prof.full_name}
+              </div>
+            )}
+          </div>
           <button className="p-schedule-btn" onClick={() => setShowExamModal(true)}>
             <Calendar size={14} />
             Programmer un examen
           </button>
         </div>
 
-        {/* 2. MODULE SWITCHER */}
+        {/* 2. MODULE SWITCHER (NEW NATIVE SELECT DROPDOWN) */}
         <div className="p-module-section p-anim1">
           <div className="p-module-label">Sélectionner le Module</div>
-          <div className="p-module-tabs">
-            {modules.map(mod => (
-              <button
-                key={mod.id}
-                className={`p-module-btn ${activeModule === mod.id ? 'active' : ''}`}
-                onClick={() => setActiveModule(mod.id)}
-              >
-                <BookOpen size={14} opacity={activeModule === mod.id ? 1 : 0.5} />
-                {mod.module_name}
-                <div className="p-mod-indicator"></div>
-              </button>
-            ))}
+          <div className="p-module-select-wrap">
+            <BookOpen size={16} className="p-module-select-icon" />
+            <select
+              className="p-module-select"
+              value={activeModule || ''}
+              onChange={(e) => setActiveModule(Number(e.target.value))}
+            >
+              {modules.map(mod => (
+                <option key={mod.id} value={mod.id}>{mod.module_name}</option>
+              ))}
+            </select>
+            <ChevronDown size={16} className="p-module-select-caret" />
           </div>
         </div>
 
@@ -813,16 +786,8 @@ export default function ProfessorDashboard() {
                     <tr key={student.id}>
                       <td><span className="p-student-num">{student.number}</span></td>
                       <td>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                          <div className="p-student-avatar">
-                            {student.avatar_url
-                              ? <img src={student.avatar_url} style={{ width: '100%', height: '100%', objectFit: 'cover' }} alt="" />
-                              : student.first_name[0]}
-                          </div>
-                          <div>
-                            <div className="p-student-name">{student.first_name} {student.last_name}</div>
-                          </div>
-                        </div>
+                        {/* Student avatar completely removed here as requested */}
+                        <div className="p-student-name">{student.first_name} {student.last_name}</div>
                       </td>
                       {activeSession === 'rattrapage' && (
                         <td style={{ textAlign: 'center' }}>
