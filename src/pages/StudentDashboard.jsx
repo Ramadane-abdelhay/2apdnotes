@@ -90,6 +90,14 @@ const GlobalStyles = () => (
       .sidebar { position: static !important; }
     }
 
+    /* CRITICAL FIX: Right Column Wrapper to prevent Grid blowout */
+    .content-col {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      min-width: 0; /* This forces the grid to respect the screen width */
+    }
+
     /* ── Sidebar ── */
     .sidebar {
       grid-row: 1 / 3;
@@ -244,14 +252,20 @@ const GlobalStyles = () => (
     .session-tab:not(.active-normal):not(.active-final):hover { color: #64748B; }
 
     /* ── Grades Table ── */
-    .grades-table-wrap { overflow-x: auto; padding: 24px 32px; }
+    .grades-table-wrap { 
+      overflow-x: auto; 
+      padding: 24px 32px; 
+      -webkit-overflow-scrolling: touch; 
+    }
     .grades-table {
       width: 100%; border-collapse: collapse;
+      min-width: 600px; /* Forces table width so scrollbar activates */
     }
     .grades-table th {
       font-size: 9px; font-weight: 700; text-transform: uppercase;
       letter-spacing: 2px; color: #94A3B8; padding: 0 16px 16px;
       text-align: left;
+      white-space: nowrap; /* Stops headers from wrapping/stacking */
     }
     .grades-table th.center { text-align: center; }
     .grades-table tbody tr {
@@ -261,6 +275,7 @@ const GlobalStyles = () => (
     .grades-table tbody tr:hover { background: #F8FAFC; }
     .grades-table td {
       padding: 14px 16px; font-size: 13px; color: #64748B;
+      white-space: nowrap; /* Stops cell data from wrapping/stacking */
     }
     .module-name-cell {
       font-size: 13px; font-weight: 600; color: #1E293B;
@@ -428,7 +443,9 @@ const GlobalStyles = () => (
       .stat-chip-lbl { font-size: 8px; letter-spacing: 1px; }
       
       .grades-header { padding: 20px 16px 0; }
-      .grades-table-wrap { padding: 16px; }
+      .grades-table-wrap { padding: 16px 0; }
+      .grades-table th:first-child, .grades-table td:first-child { padding-left: 16px; }
+      .grades-table th:last-child, .grades-table td:last-child { padding-right: 16px; }
       
       .session-tabs { flex-wrap: wrap; }
       .session-tab { padding: 8px 4px; font-size: 10px; }
@@ -635,7 +652,7 @@ export default function StudentDashboard() {
         </aside>
 
         {/* ── GRADES PANEL ── */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+        <div className="content-col">
 
           {/* Stat chips */}
           <div className="stats-row anim-3">
