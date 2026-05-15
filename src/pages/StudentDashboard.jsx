@@ -59,7 +59,7 @@ const GlobalStyles = () => (
       padding: 16px 32px;
     }
     .header-inner {
-      max-width: 1400px; margin: 0 auto;
+      max-width: 1336px; margin: 0 auto;
       display: flex; align-items: center; justify-content: space-between;
       height: 60px; padding: 0 24px; border-radius: 16px;
     }
