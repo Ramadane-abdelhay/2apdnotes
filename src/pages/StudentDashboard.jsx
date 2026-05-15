@@ -90,12 +90,12 @@ const GlobalStyles = () => (
       .sidebar { position: static !important; }
     }
 
-    /* CRITICAL FIX: Right Column Wrapper to prevent Grid blowout */
+    /* CRITICAL FIX: Right Column Wrapper */
     .content-col {
       display: flex;
       flex-direction: column;
       gap: 16px;
-      min-width: 0; /* This forces the grid to respect the screen width */
+      min-width: 0; 
     }
 
     /* ── Sidebar ── */
@@ -268,13 +268,13 @@ const GlobalStyles = () => (
     }
     .grades-table {
       width: 100%; border-collapse: collapse;
-      min-width: 600px; /* Forces table width so scrollbar activates */
+      /* Removed min-width so the table shrinks naturally to its text content! */
     }
     .grades-table th {
       font-size: 9px; font-weight: 700; text-transform: uppercase;
       letter-spacing: 2px; color: #94A3B8; padding: 0 16px 16px;
       text-align: left;
-      white-space: nowrap; /* Stops headers from wrapping/stacking */
+      white-space: nowrap; 
     }
     .grades-table th.center { text-align: center; }
     .grades-table tbody tr {
@@ -284,7 +284,7 @@ const GlobalStyles = () => (
     .grades-table tbody tr:hover { background: #F8FAFC; }
     .grades-table td {
       padding: 14px 16px; font-size: 13px; color: #64748B;
-      white-space: nowrap; /* Stops cell data from wrapping/stacking */
+      white-space: nowrap; 
     }
     .module-name-cell {
       font-size: 13px; font-weight: 600; color: #1E293B;
@@ -441,7 +441,7 @@ const GlobalStyles = () => (
       .header { padding: 12px 12px; }
       .header-inner { padding: 0 12px; gap: 10px; }
       .header-logos { gap: 10px; }
-      .header-logo { height: 30px; } /* Scales down logos on mobile */
+      .header-logo { height: 30px; } 
       
       .profile-card { padding: 20px; }
       .exam-card { padding: 20px; }
@@ -453,11 +453,24 @@ const GlobalStyles = () => (
       
       .grades-controls-card { padding: 20px 16px; }
       
-      /* Toggle Semestre to S */
       .sem-text-desktop { display: none; }
       .sem-text-mobile { display: inline; }
 
       .grades-table-wrap { padding: 16px 0; }
+      
+      /* Allows table to shrink even tighter on mobile by reducing padding */
+      .grades-table th, .grades-table td {
+        padding: 10px 8px; 
+      }
+      .note-chip {
+        min-width: 44px;
+        padding: 4px 8px;
+        font-size: 11px;
+      }
+      .module-name-cell {
+        font-size: 11px;
+      }
+      
       .grades-table th:first-child, .grades-table td:first-child { padding-left: 16px; }
       .grades-table th:last-child, .grades-table td:last-child { padding-right: 16px; }
       
