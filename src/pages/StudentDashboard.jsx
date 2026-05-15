@@ -244,14 +244,25 @@ const GlobalStyles = () => (
     .session-tab:not(.active-normal):not(.active-final):hover { color: #64748B; }
 
     /* ── Grades Table ── */
-    .grades-table-wrap { overflow-x: auto; padding: 24px 32px; }
+    .grades-table-wrap {
+      overflow-x: auto;
+      padding: 24px 32px;
+      -webkit-overflow-scrolling: touch;
+    }
+    /* Subtle scroll hint on mobile */
+    .grades-table-wrap::-webkit-scrollbar { height: 3px; }
+    .grades-table-wrap::-webkit-scrollbar-thumb { background: rgba(37,99,235,0.2); border-radius: 4px; }
+
     .grades-table {
       width: 100%; border-collapse: collapse;
+      /* Ensure table never collapses below readable size */
+      min-width: 360px;
     }
     .grades-table th {
       font-size: 9px; font-weight: 700; text-transform: uppercase;
       letter-spacing: 2px; color: #94A3B8; padding: 0 16px 16px;
       text-align: left;
+      white-space: nowrap;
     }
     .grades-table th.center { text-align: center; }
     .grades-table tbody tr {
@@ -261,7 +272,11 @@ const GlobalStyles = () => (
     .grades-table tbody tr:hover { background: #F8FAFC; }
     .grades-table td {
       padding: 14px 16px; font-size: 13px; color: #64748B;
+      white-space: nowrap;
     }
+    /* Module name column is the only one allowed to wrap */
+    .grades-table td:first-child { white-space: normal; }
+
     .module-name-cell {
       font-size: 13px; font-weight: 600; color: #1E293B;
     }
@@ -285,6 +300,7 @@ const GlobalStyles = () => (
       display: inline-flex; align-items: center; gap: 5px;
       font-size: 9px; font-weight: 800; text-transform: uppercase;
       letter-spacing: 1px; padding: 5px 10px; border-radius: 7px;
+      white-space: nowrap;
     }
     .sit-v   { background: #D1FAE5; color: #059669; border: 1px solid rgba(5,150,105,0.2); }
     .sit-ratt{ background: #FEF3C7; color: #D97706; border: 1px solid rgba(217,119,6,0.2); }
@@ -410,30 +426,102 @@ const GlobalStyles = () => (
     .anim-3 { animation: slideInUp .4s .16s ease both; }
     .anim-4 { animation: slideInUp .4s .24s ease both; }
 
-    /* ── RESPONSIVE TWEAKS FOR < 480px ── */
+    /* ══════════════════════════════════════════
+       RESPONSIVE — tablets (≤ 768px)
+    ══════════════════════════════════════════ */
+    @media (max-width: 768px) {
+      .main-layout { padding: 0 16px 80px; gap: 14px; }
+
+      .header { padding: 10px 16px; }
+      .header-inner { padding: 0 14px; height: 52px; border-radius: 14px; }
+
+      .grades-header { padding: 20px 20px 0; }
+      .grades-title { font-size: 18px; margin-bottom: 16px; }
+
+      /* Semester tabs: fill full width */
+      .sem-tabs { width: 100%; }
+      .sem-tab { flex: 1; padding: 8px 10px; font-size: 11px; }
+
+      /* Session tabs: tighter */
+      .session-tab { padding: 9px 8px; font-size: 10px; }
+
+      .grades-table-wrap { padding: 16px 20px; }
+
+      /* ── Table cell sizing on tablet ── */
+      .grades-table th { padding: 0 10px 14px; font-size: 8px; letter-spacing: 1.5px; }
+      .grades-table td { padding: 12px 10px; font-size: 12px; }
+      .note-chip { font-size: 12px; padding: 5px 10px; min-width: 44px; }
+    }
+
+    /* ══════════════════════════════════════════
+       RESPONSIVE — phones (≤ 480px)
+    ══════════════════════════════════════════ */
     @media (max-width: 480px) {
-      .main-layout { padding: 0 16px 80px; }
-      
-      .header { padding: 12px 12px; }
-      .header-inner { padding: 0 12px; gap: 10px; }
+      .main-layout { padding: 0 12px 80px; gap: 12px; }
+
+      /* Header */
+      .header { padding: 8px 12px; }
+      .header-inner { padding: 0 12px; height: 48px; border-radius: 12px; }
       .header-logos { gap: 10px; }
-      .header-logo { height: 30px; } /* Scales down logos on mobile */
-      
+      .header-logo { height: 28px; }
+
+      /* Profile */
       .profile-card { padding: 20px; }
-      .exam-card { padding: 20px; }
-      
+      .exam-card { padding: 18px; }
+
+      /* Stats row */
       .stats-row { gap: 8px; }
       .stat-chip { padding: 12px 10px; }
-      .stat-chip-val { font-size: 18px; }
+      .stat-chip-val { font-size: 20px; }
       .stat-chip-lbl { font-size: 8px; letter-spacing: 1px; }
-      
-      .grades-header { padding: 20px 16px 0; }
-      .grades-table-wrap { padding: 16px; }
-      
-      .session-tabs { flex-wrap: wrap; }
-      .session-tab { padding: 8px 4px; font-size: 10px; }
-      
-      .modal-box { padding: 24px; }
+
+      /* Grades header */
+      .grades-header { padding: 18px 14px 0; }
+      .grades-title { font-size: 16px; margin-bottom: 14px; }
+
+      /* Semester tabs: full width, equal split */
+      .sem-tabs { width: 100%; }
+      .sem-tab { flex: 1; padding: 8px 6px; font-size: 10px; }
+
+      /* Session tabs: stack on very narrow screens */
+      .session-tabs { flex-wrap: wrap; gap: 4px; }
+      .session-tab { flex: 1 1 calc(50% - 4px); padding: 8px 4px; font-size: 10px; }
+
+      /* Table wrapper — allow horizontal scroll with momentum */
+      .grades-table-wrap {
+        padding: 14px 14px;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+      }
+
+      /* Table: compact columns, guaranteed scrollable */
+      .grades-table { min-width: 480px; } /* enough for Note Finale's 5 cols */
+      .grades-table th { padding: 0 8px 12px; font-size: 8px; letter-spacing: 1px; }
+      .grades-table td { padding: 11px 8px; font-size: 12px; }
+
+      /* Module name: let it wrap across 2 lines max */
+      .grades-table td:first-child { white-space: normal; min-width: 110px; max-width: 140px; }
+      .module-name-cell { font-size: 12px; line-height: 1.35; }
+
+      /* Note chips: tighter on mobile */
+      .note-chip { font-size: 11px; padding: 5px 8px; min-width: 38px; border-radius: 6px; }
+
+      /* Situation badge: shorter labels still fit */
+      .sit-badge { font-size: 8px; padding: 4px 7px; letter-spacing: 0.5px; }
+
+      /* Modal */
+      .modal-box { padding: 22px 18px; }
+    }
+
+    /* ══════════════════════════════════════════
+       RESPONSIVE — very small phones (≤ 360px)
+    ══════════════════════════════════════════ */
+    @media (max-width: 360px) {
+      .grades-table { min-width: 440px; }
+      .header-logo { height: 24px; }
+      .stat-chip-val { font-size: 17px; }
+      /* Stack session tabs fully */
+      .session-tab { flex: 1 1 100%; }
     }
   `}</style>
 );
